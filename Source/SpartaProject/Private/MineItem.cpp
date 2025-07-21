@@ -36,7 +36,7 @@ void AMineItem::ActivateItem(AActor* Activator)
 
 void AMineItem::Explode()
 {
-	UParticleSystemComponent* Particle = nullptr;
+	TWeakObjectPtr<UParticleSystemComponent> Particle = nullptr;
 
 	if (ExplosionParticle)
 	{
@@ -62,14 +62,14 @@ void AMineItem::Explode()
 	}
 	DestroyItem();
 
-	if (Particle)
+	if (Particle.IsValid())
 	{
 		FTimerHandle DestroyParticleTimerHandle;
 
 		GetWorld()->GetTimerManager().SetTimer(DestroyParticleTimerHandle,
 		                                       [Particle]()
 		                                       {
-			                                       if (IsValid(Particle))
+			                                       if (IsValid(Particle.Get()))
 			                                       {
 				                                       Particle->DestroyComponent();
 			                                       }

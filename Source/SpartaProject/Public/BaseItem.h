@@ -17,6 +17,8 @@ class SPARTAPROJECT_API ABaseItem : public AActor,  public IItemInterface
 public:	
 	ABaseItem();
 
+	virtual void DestroyItem();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FName ItemType;
@@ -44,7 +46,5 @@ protected:
 	                              int32 OtherBodyIndex) override;
 	virtual void ActivateItem(AActor* Activator) override;
 	virtual FName GetItemType() const override;
-
-	virtual void DestroyItem();
 
 };

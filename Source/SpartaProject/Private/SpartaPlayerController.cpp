@@ -103,14 +103,13 @@ void ASpartaPlayerController::ShowMainMenu(bool bIsReStart)
 				MainMenuWidgetInstance->ProcessEvent(PlayAnimFunc, nullptr);
 			}
 
-			if (UTextBlock* TotalScoreText = Cast<UTextBlock>(
-				MainMenuWidgetInstance->GetWidgetFromName("TotalScoreText")))
+			if (UTextBlock* TotalScoreText =
+				Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName("TotalScoreText")))
 			{
-				if (USpartaGameInstance* SpartaGameInstance = Cast<USpartaGameInstance>(
-					UGameplayStatics::GetGameInstance(this)))
+				if (USpartaGameInstance* SpartaGameInstance =
+					Cast<USpartaGameInstance>(UGameplayStatics::GetGameInstance(this)))
 				{
-					TotalScoreText->SetText(
-						FText::FromString(FString::Printf(TEXT("Total Score: %d"), SpartaGameInstance->TotalScore)));
+					TotalScoreText->SetText(FText::FromString(FString::Printf(TEXT("Total Score: %d"), SpartaGameInstance->TotalScore)));
 				}
 			}
 		}
@@ -124,7 +123,7 @@ void ASpartaPlayerController::StartGame()
 		SpartaGameInstance->CurrentLevelIndex = 0;
 		SpartaGameInstance->TotalScore = 0;
 	}
-	
+
 	UGameplayStatics::OpenLevel(GetWorld(), TEXT("BasicLevel"));
 	SetPause(false);
 }
