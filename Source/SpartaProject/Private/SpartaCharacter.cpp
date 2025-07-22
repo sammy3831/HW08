@@ -27,11 +27,12 @@ ASpartaCharacter::ASpartaCharacter()
 	OverheadWidget->SetupAttachment(GetMesh());
 	OverheadWidget->SetWidgetSpace(EWidgetSpace::Screen);
 
-	NormalSpeed = 600.0f;
+	DefaultSpeed = 600.0f;
+	WalkSpeed = DefaultSpeed;
 	SprintSpeedMultiplier = 1.7f;
-	SprintSpeed = NormalSpeed * SprintSpeedMultiplier;
+	SprintSpeed = WalkSpeed * SprintSpeedMultiplier;
 
-	GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
 	MaxHealth = 100.0f;
 	Health = MaxHealth;
@@ -46,6 +47,67 @@ void ASpartaCharacter::AddHealth(float Amount)
 {
 	Health = FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
 	UpdateOverheadHP();
+}
+
+void ASpartaCharacter::ApplyChangeSpeedAffect(float Amount, float Duration, const FName& ItemType)
+{
+	if (GetCharacterMovement())
+	{
+		WalkSpeed = WalkSpeed * Amount;
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+		if (ItemType == "SlowItem")
+		{
+			AffectCount.DecreaseSpeedCount++;
+			GetWorld()->GetTimerManager().SetTimer(DecreaseSpeedTimerHandle, this,
+			                                       &ASpartaCharacter::ResetSpeedFromSlow,
+			                                       Duration, false);
+		}
+		else if (ItemType == "SpeedItem")
+		{
+			AffectCount.IncreaseSpeedCount++;
+			GetWorld()->GetTimerManager().SetTimer(IncreaseSpeedTimerHandle, this,
+			                                       &ASpartaCharacter::ResetSpeedFromSpeed,
+			                                       Duration, false);
+		}
+	}
+}
+
+void ASpartaCharacter::ResetSpeedFromSpeed()
+{
+	if (GetCharacterMovement())
+	{
+		AffectCount.IncreaseSpeedCount = 0;
+		WalkSpeed = DefaultSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
+	}
+}
+
+void ASpartaCharacter::ResetSpeedFromSlow()
+{
+	if (GetCharacterMovement())
+	{
+		AffectCount.DecreaseSpeedCount = 0;
+		WalkSpeed = DefaultSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
+	}
+}
+
+void ASpartaCharacter::ApplyChangeScaleAffect(float Amount, float Duration)
+{
+	SetActorScale3D(GetActorScale3D() * Amount);
+
+	AffectCount.ChangeScaleCount++;
+
+	GetWorld()->GetTimerManager().SetTimer(ChangeScaleTimerHandle, this,
+	                                       &ASpartaCharacter::ResetScale,
+	                                       Duration, false);
+}
+
+void ASpartaCharacter::ResetScale()
+{
+	AffectCount.ChangeScaleCount = 0;
+	SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 void ASpartaCharacter::BeginPlay()
@@ -150,6 +212,7 @@ void ASpartaCharacter::StartSprint(const FInputActionValue& Value)
 {
 	if (GetCharacterMovement())
 	{
+		SprintSpeed = WalkSpeed * SprintSpeedMultiplier;
 		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 	}
 }
@@ -158,16 +221,16 @@ void ASpartaCharacter::StopSprint(const FInputActionValue& Value)
 {
 	if (GetCharacterMovement())
 	{
-		GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	}
 }
 
 void ASpartaCharacter::OnDeath()
 {
-	ASpartaGameState* SprtaGameState = GetWorld() ? GetWorld()->GetGameState<ASpartaGameState>() : nullptr;
-	if (SprtaGameState)
+	ASpartaGameState* SpartaGameState = GetWorld() ? GetWorld()->GetGameState<ASpartaGameState>() : nullptr;
+	if (SpartaGameState)
 	{
-		SprtaGameState->OnGameOver();
+		SpartaGameState->OnGameOver();
 	}
 }
 

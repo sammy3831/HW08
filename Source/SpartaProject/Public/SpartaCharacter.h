@@ -32,6 +32,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void AddHealth(float Amount);
 
+	void ApplyChangeSpeedAffect(float Amount, float Duration, const FName& ItemType);
+	void ApplyChangeScaleAffect(float Amount, float Duration);
+
+	struct FAffectCount
+	{
+		int32 IncreaseSpeedCount = 0;
+		int32 DecreaseSpeedCount = 0;
+		int32 ChangeScaleCount = 0;
+	};
+
+	FAffectCount AffectCount;
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
@@ -62,7 +74,16 @@ protected:
 	void UpdateOverheadHP();
 
 private:
-	float NormalSpeed;
+	float DefaultSpeed;
+	float WalkSpeed;
 	float SprintSpeedMultiplier;
 	float SprintSpeed;
+
+	FTimerHandle IncreaseSpeedTimerHandle;
+	FTimerHandle DecreaseSpeedTimerHandle;
+	FTimerHandle ChangeScaleTimerHandle;
+	
+	void ResetSpeedFromSpeed();
+	void ResetSpeedFromSlow();
+	void ResetScale();
 };
