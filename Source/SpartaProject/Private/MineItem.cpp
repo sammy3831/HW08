@@ -2,15 +2,13 @@
 
 
 #include "MineItem.h"
-
-#include "ShaderPrintParameters.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 AMineItem::AMineItem()
 {
-	ExplosionDelay = 5.0f;
+	ExplosionDelay = 3.0f;
 	ExplosionRadius = 300.0f;
 	ExplosionDamage = 30.0f;
 	ItemType = "Mine";

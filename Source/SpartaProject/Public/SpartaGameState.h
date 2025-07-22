@@ -43,6 +43,8 @@ public:
 	FTimerHandle WaveDelayTimerHandle;
 	FTimerHandle HUDUpdateTimerHandle;
 
+	bool bSpikeActivate;
+	
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetScore() const;
 	UFUNCTION(BlueprintCallable, Category = "Score")

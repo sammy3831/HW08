@@ -209,16 +209,18 @@ void ASpartaGameState::UpdateHUD()
 				{
 					if (ASpartaCharacter* Character = Cast<ASpartaCharacter>(SpartaPlayerController->GetCharacter()))
 					{
-						IncreaseSpeedText->SetText(FText::FromString(FString::Printf(TEXT("속도 증가 : %d 중첩"), Character->AffectCount.IncreaseSpeedCount)));
+						IncreaseSpeedText->SetText(FText::FromString(
+							FString::Printf(TEXT("속도 증가 : %d 중첩"), Character->AffectCount.IncreaseSpeedCount)));
 					}
 				}
 
-				if (UTextBlock* DncreaseSpeedText = Cast<UTextBlock>(
+				if (UTextBlock* DecreaseSpeedText = Cast<UTextBlock>(
 					HUDWidget->GetWidgetFromName(TEXT("DecreaseSpeedText"))))
 				{
 					if (ASpartaCharacter* Character = Cast<ASpartaCharacter>(SpartaPlayerController->GetCharacter()))
 					{
-						DncreaseSpeedText->SetText(FText::FromString(FString::Printf(TEXT("속도 감소 : %d 중첩"), Character->AffectCount.DecreaseSpeedCount)));
+						DecreaseSpeedText->SetText(FText::FromString(
+							FString::Printf(TEXT("속도 감소 : %d 중첩"), Character->AffectCount.DecreaseSpeedCount)));
 					}
 				}
 
@@ -227,7 +229,20 @@ void ASpartaGameState::UpdateHUD()
 				{
 					if (ASpartaCharacter* Character = Cast<ASpartaCharacter>(SpartaPlayerController->GetCharacter()))
 					{
-						ChangeScaleText->SetText(FText::FromString(FString::Printf(TEXT("크기 감소 : %d 중첩"), Character->AffectCount.ChangeScaleCount)));
+						ChangeScaleText->SetText(FText::FromString(
+							FString::Printf(TEXT("크기 감소 : %d 중첩"), Character->AffectCount.ChangeScaleCount)));
+					}
+				}
+
+				if (UTextBlock* SpikeText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName(TEXT("SpikeText"))))
+				{
+					if (bSpikeActivate)
+					{
+						SpikeText->SetVisibility(ESlateVisibility::Visible);
+					}
+					else
+					{
+						SpikeText->SetVisibility(ESlateVisibility::Hidden);
 					}
 				}
 			}
